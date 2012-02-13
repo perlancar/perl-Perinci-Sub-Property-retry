@@ -63,6 +63,14 @@ declare_property(
             $self->unindent;
             $self->push_lines('} else {');
             $self->indent;
+            # return information on number of retries performed
+            unless ($self->{_meta}{result_naked}) {
+                $self->push_lines('if ($retries) {');
+                $self->push_lines($self->{indent} . '$res->[3] //= {};');
+                $self->push_lines($self->{indent} . '$res->[3]{wrap_retries}' .
+                              ' = $retries;');
+                $self->push_lines('}');
+            }
             $self->push_lines('last RETRY;');
             $self->unindent;
             $self->push_lines('}');
