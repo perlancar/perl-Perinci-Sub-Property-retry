@@ -16,7 +16,11 @@ declare_property(
         ['hash*' => {keys=>{
             'n'     => ['int' => {min=>0, default=>0}],
             'delay' => ['int' => {min=>0, default=>0}],
-            'success_statuses' => ['regex' => {default=>'^(2..|304)$'}],
+            'success_statuses'   => ['regex' => {default=>'^(2..|304)$'}],
+            'fatal_statuses'     => 'regex',
+            'non_fatal_statuses' => 'regex',
+            'fatal_messages'     => 'regex',
+            'non_fatal_messages' => 'regex',
         }}],
     ]}],
     wrapper => {
@@ -35,8 +39,12 @@ declare_property(
             $v->{delay}            //= 0;
             $v->{success_statuses} //= qr/^(2..|304)$/;
 
-            unless (ref($v->{success_statuses}) eq 'Regexp') {
-                $v->{success_statuses} = qr/$v->{success_statuses}/;
+            for my $k (qw/success_statuses
+                          fatal_statuses non_fatal_statuses
+                          fatal_messages non_fatal_messages/) {
+                if (defined($v->{$k}) && ref($v->{$k}) ne 'Regexp') {
+                    $v->{$k} = qr/$v->{$k}/;
+                }
             }
 
             return unless $v->{n} > 0;
@@ -55,6 +63,25 @@ declare_property(
                                       $v->{success_statuses}.'/) {');
             }
             $self->indent;
+            if ($v->{fatal_statuses}) {
+                $self->_errif('521', '"Can\'t retry (fatal status $res->[0])"',
+                              '$res->[0] =~ qr/'.$v->{fatal_statuses}.'/');
+            }
+            if ($v->{non_fatal_statuses}) {
+                $self->_errif(
+                    '521', '"Can\'t retry (not non-fatal status $res->[0])"',
+                    '$res->[0] !~ qr/'.$v->{non_fatal_statuses}.'/');
+            }
+            if ($v->{fatal_messages}) {
+                $self->_errif(
+                    '521', '"Can\'t retry (fatal message: $res->[1])"',
+                    '$res->[1] =~ qr/'.$v->{fatal_messages}.'/');
+            }
+            if ($v->{non_fatal_messages}) {
+                $self->_errif(
+                    '521', '"Can\'t retry (not non-fatal message $res->[1])"',
+                    '$res->[1] !~ qr/'.$v->{non_fatal_messages}.'/');
+            }
             $self->_errif('521', '"Maximum retries reached"',
                           '++$retries > '.$v->{n});
             $self->push_lines('sleep '.int($v->{delay}).';')
@@ -96,11 +123,46 @@ declare_property(
 
 This property specifies retry behavior.
 
-Values: a hash containing these keys 'n' (int, number of retries, default is 0
-which means no retry), 'delay' (int, number of seconds to wait before each
-retry, default is 0 which means no wait between retries), and 'success_statuses'
-(regex, which status is considered success, default is C<^(2..|304)$>). Or it
-can also be an integer (specifying just 'n').
+Values: a hash containing these keys:
+
+=over 4
+
+=item * n => INT (default: 0)
+
+Number of retries, default is 0 which means no retry.
+
+=item * delay => INT (default: 0)
+
+Number of seconds to wait before each retry, default is 0 which means no wait
+between retries.
+
+=item * success_statuses => REGEX (default: '^(2..|304)$')
+
+Which status is considered success.
+
+=item * fatal_statuses => REGEX
+
+If set, specify that status matching this should be considered fatal and no
+retry should be attempted.
+
+=item * non_fatal_statuses => REGEX
+
+If set, specify that status I<not> matching this should be considered fatal and
+no retry should be attempted.
+
+=item * fatal_messages => REGEX
+
+If set, specify that message matching this should be considered fatal and no
+retry should be attempted.
+
+=item * non_fatal_messages => REGEX
+
+If set, specify that message I<not> matching this should be considered fatal and
+no retry should be attempted.
+
+=back
+
+Property value can also be an integer (specifying just 'n').
 
 If function does not return enveloped result (result_naked=0), which means there
 is no status returned, a function is assumed to fail only when it dies.
