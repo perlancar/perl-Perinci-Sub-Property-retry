@@ -25,6 +25,7 @@ declare_property(
     ]}],
     wrapper => {
         meta => {
+            v       => 2,
             # very high, we want to trap errors as early as possible after eval,
             # so we can retry it.
             prio    => 0,
