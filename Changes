@@ -1,5 +1,12 @@
 Revision history for Perinci-Sub-property-retry
 
-0.01     2012-02-13
+0.02     2012-02-13 (SHARYANTO)
+
+         [ENHANCEMENTS]
+
+         - Add params: {,non_}fatal_{statuses,messages}.
+
+
+0.01     2012-02-13 (SHARYANTO)
 
          First release.
