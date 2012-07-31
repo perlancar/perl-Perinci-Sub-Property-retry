@@ -169,6 +169,26 @@ test_wrap(
     },
 );
 
-# XXX test delay
+# test param: delay
+
+
+{
+    $n=0;
+    my $t0=time();
+    test_wrap(
+        name        => 'delay',
+        wrap_args   => {sub => $sub, meta => $meta,
+                        convert=>{retry=>{n=>2, delay=>2}}},
+        wrap_status => 200,
+        call_argsr  => [s1=>311, n=>1, s2=>200],
+        call_status => 200,
+        posttest    => sub {
+            is($n, 1, 'n');
+            my $t1 = time();
+            #diag $t1-$t0;
+            ok($t1-$t0 > 1, '>1 secs elapsed');
+        },
+    );
+}
 
 done_testing();
