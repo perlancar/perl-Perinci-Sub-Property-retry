@@ -1,4 +1,4 @@
-package Perinci::Sub::Wrapper::property::retry;
+package Perinci::Sub::Wrapper::Property::retry;
 
 use 5.010;
 use strict;

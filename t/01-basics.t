@@ -8,7 +8,6 @@ use List::Util qw(sum);
 use Perinci::Sub::Wrapper qw(wrap_sub);
 use Test::More 0.96;
 use Test::Perinci::Sub::Wrapper qw(test_wrap);
-use Perinci::Sub::property::retry;
 
 my ($sub, $meta);
 my $n;
