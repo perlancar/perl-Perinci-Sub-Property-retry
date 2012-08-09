@@ -1,5 +1,11 @@
 Revision history for Perinci-Sub-Property-retry
 
+0.04     2012-08-09 (SHARYANTO)
+
+         No functional changes. Correct casing in name:
+         Perinci::Sub::{p,P}roperty::
+
+
 0.03     2012-07-31 (SHARYANTO)
 
          No functional changes. Update to wrapping protocol version 2.
