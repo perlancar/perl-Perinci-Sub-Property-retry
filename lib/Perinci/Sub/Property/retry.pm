@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Perinci::Util qw(declare_property);
+use Perinci::Sub::PropertyUtil qw(declare_property);
 
 # VERSION
 
