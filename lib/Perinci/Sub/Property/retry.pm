@@ -52,39 +52,39 @@ declare_property(
 
             $self->select_section('before_eval');
             $self->push_lines(
-                '', 'my $retries = 0;',
+                '', 'my $_w_retries = 0;',
                 'RETRY: while (1) {');
             $self->indent;
 
             $self->select_section('after_eval');
             if ($self->{_arg}{meta}{result_naked}) {
-                $self->push_lines('if ($eval_err) {');
+                $self->push_lines('if ($_w_eval_err) {');
             } else {
-                $self->push_lines('if ($eval_err || $res->[0] !~ qr/'.
+                $self->push_lines('if ($_w_eval_err || $_w_res->[0] !~ qr/'.
                                       $v->{success_statuses}.'/) {');
             }
             $self->indent;
             if ($v->{fatal_statuses}) {
-                $self->_errif('521', '"Can\'t retry (fatal status $res->[0])"',
-                              '$res->[0] =~ qr/'.$v->{fatal_statuses}.'/');
+                $self->_errif('521', '"Can\'t retry (fatal status $_w_res->[0])"',
+                              '$_w_res->[0] =~ qr/'.$v->{fatal_statuses}.'/');
             }
             if ($v->{non_fatal_statuses}) {
                 $self->_errif(
-                    '521', '"Can\'t retry (not non-fatal status $res->[0])"',
-                    '$res->[0] !~ qr/'.$v->{non_fatal_statuses}.'/');
+                    '521', '"Can\'t retry (not non-fatal status $_w_res->[0])"',
+                    '$_w_res->[0] !~ qr/'.$v->{non_fatal_statuses}.'/');
             }
             if ($v->{fatal_messages}) {
                 $self->_errif(
-                    '521', '"Can\'t retry (fatal message: $res->[1])"',
-                    '$res->[1] =~ qr/'.$v->{fatal_messages}.'/');
+                    '521', '"Can\'t retry (fatal message: $_w_res->[1])"',
+                    '$_w_res->[1] =~ qr/'.$v->{fatal_messages}.'/');
             }
             if ($v->{non_fatal_messages}) {
                 $self->_errif(
-                    '521', '"Can\'t retry (not non-fatal message $res->[1])"',
-                    '$res->[1] !~ qr/'.$v->{non_fatal_messages}.'/');
+                    '521', '"Can\'t retry (not non-fatal message $_w_res->[1])"',
+                    '$_w_res->[1] !~ qr/'.$v->{non_fatal_messages}.'/');
             }
             $self->_errif('521', '"Maximum retries reached"',
-                          '++$retries > '.$v->{n});
+                          '++$_w_retries > '.$v->{n});
             $self->push_lines('sleep '.int($v->{delay}).';')
                 if $v->{delay};
             $self->push_lines('next RETRY;');
@@ -94,9 +94,9 @@ declare_property(
             # return information on number of retries performed
             unless ($self->{_meta}{result_naked}) {
                 $self->push_lines('if ($retries) {');
-                $self->push_lines($self->{indent} . '$res->[3] //= {};');
-                $self->push_lines($self->{indent} . '$res->[3]{wrap_retries}' .
-                              ' = $retries;');
+                $self->push_lines($self->{indent} . '$_w_res->[3] //= {};');
+                $self->push_lines($self->{indent} . '$_w_res->[3]{wrap_retries}' .
+                              ' = $_w_retries;');
                 $self->push_lines('}');
             }
             $self->push_lines('last RETRY;');
