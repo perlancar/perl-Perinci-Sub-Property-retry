@@ -93,7 +93,7 @@ declare_property(
             $self->indent;
             # return information on number of retries performed
             unless ($self->{_meta}{result_naked}) {
-                $self->push_lines('if ($retries) {');
+                $self->push_lines('if ($_w_retries) {');
                 $self->push_lines($self->{indent} . '$_w_res->[3] //= {};');
                 $self->push_lines($self->{indent} . '$_w_res->[3]{wrap_retries}' .
                               ' = $_w_retries;');
