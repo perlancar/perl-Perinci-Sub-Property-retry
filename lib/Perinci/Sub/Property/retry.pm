@@ -56,6 +56,15 @@ declare_property(
                 'RETRY: while (1) {');
             $self->indent;
 
+            # pass special variable for function to let it know about retries
+            $self->select_section('before_call_arg_validation');
+            my $args_as = $self->{_meta}{args_as};
+            if ($args_as eq 'hash') {
+                $self->push_lines('$args{-retries} = $_w_retries;');
+            } elsif ($args_as eq 'hashref') {
+                $self->push_lines('$args->{-retries} = $_w_retries;');
+            }
+
             $self->select_section('after_eval');
             if ($self->{_arg}{meta}{result_naked}) {
                 $self->push_lines('if ($_w_eval_err) {');
@@ -170,6 +179,9 @@ is no status returned, a function is assumed to fail only when it dies.
 
 This property's wrapper implementation currently uses a simple loop around
 the eval block.
+
+It also pass a special argument to the function C<-retries> so that function can
+be aware about retries.
 
 
 =head1 SEE ALSO
