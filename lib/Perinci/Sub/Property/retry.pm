@@ -103,8 +103,8 @@ declare_property(
             # return information on number of retries performed
             unless ($self->{_meta}{result_naked}) {
                 $self->push_lines('if ($_w_retries) {');
-                $self->push_lines($self->{indent} . '$_w_res->[3] //= {};');
-                $self->push_lines($self->{indent} . '$_w_res->[3]{retries}' .
+                $self->push_lines($self->{_args}{indent} . '$_w_res->[3] //= {};');
+                $self->push_lines($self->{_args}{indent} . '$_w_res->[3]{retries}' .
                               ' = $_w_retries;');
                 $self->push_lines('}');
             }
