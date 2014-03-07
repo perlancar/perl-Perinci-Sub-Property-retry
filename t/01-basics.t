@@ -18,17 +18,17 @@ $meta = {v=>1.1, args=>{n=>{}}};
 
 # test param: n
 
-$n=0;
 test_wrap(
+    pretest => sub { $n=0 },
     name => 'no retry, dies',
     wrap_args => {sub => $sub, meta => $meta},
     wrap_status => 200,
     call_argsr => [n=>1],
-    call_status => 500,
+    call_dies => 1,
 );
 
-$n=0;
 test_wrap(
+    pretest => sub { $n=0 },
     name => 'retry=1, succeed',
     wrap_args => {sub => $sub, meta => $meta, convert=>{retry=>1}},
     wrap_status => 200,
@@ -36,8 +36,8 @@ test_wrap(
     call_status => 200,
 );
 
-$n=0;
 test_wrap(
+    pretest => sub { $n=0 },
     name => 'retry=1, max retries reached',
     wrap_args => {sub => $sub, meta => $meta, convert=>{retry=>1}},
     wrap_status => 200,
@@ -56,8 +56,8 @@ $meta = {v=>1.1, args=>{s1=>{}, n=>{}, s2=>{}}};
 
 # test param: success_statuses
 
-$n=0;
 test_wrap(
+    pretest     => sub { $n=0 },
     name        => 'success_statuses #1',
     wrap_args   => {sub => $sub, meta => $meta,
                     convert=>{retry=>{n=>2, success_statuses=>qr/^311$/}}},
@@ -69,8 +69,8 @@ test_wrap(
     },
 );
 
-$n=0;
 test_wrap(
+    pretest     => sub { $n=0 },
     name        => 'success_statuses #2',
     wrap_args   => {sub => $sub, meta => $meta,
                     convert=>{retry=>{n=>2, success_statuses=>qr/^200$/}}},
@@ -84,8 +84,8 @@ test_wrap(
 
 # test param: fatal_statuses
 
-$n=0;
 test_wrap(
+    pretest     => sub { $n=0 },
     name        => 'fatal_statuses',
     wrap_args   => {sub => $sub, meta => $meta,
                     convert=>{retry=>{n=>2, fatal_statuses=>qr/^311$/}}},
@@ -99,8 +99,8 @@ test_wrap(
 
 # test param: non_fatal_statuses
 
-$n=0;
 test_wrap(
+    pretest     => sub { $n=0 },
     name        => 'non_fatal_statuses #1',
     wrap_args   => {sub => $sub, meta => $meta,
                     convert=>{retry=>{n=>2, non_fatal_statuses=>qr/^311$/}}},
@@ -112,8 +112,8 @@ test_wrap(
     },
 );
 
-$n=0;
 test_wrap(
+    pretest     => sub { $n=0 },
     name        => 'non_fatal_statuses #2',
     wrap_args   => {sub => $sub, meta => $meta,
                     convert=>{retry=>{n=>2, non_fatal_statuses=>qr/^312$/}}},
@@ -127,8 +127,8 @@ test_wrap(
 
 # test param: fatal_messages
 
-$n=0;
 test_wrap(
+    pretest     => sub { $n=0 },
     name        => 'fatal_messages',
     wrap_args   => {sub => $sub, meta => $meta,
                     convert=>{retry=>{n=>2, fatal_messages=>qr/^m1$/}}},
@@ -142,8 +142,8 @@ test_wrap(
 
 # test param: non_fatal_messages
 
-$n=0;
 test_wrap(
+    pretest     => sub { $n=0 },
     name        => 'non_fatal_messages #1',
     wrap_args   => {sub => $sub, meta => $meta,
                     convert=>{retry=>{n=>2, non_fatal_messages=>qr/^m1$/}}},
@@ -155,8 +155,8 @@ test_wrap(
     },
 );
 
-$n=0;
 test_wrap(
+    pretest     => sub { $n=0 },
     name        => 'non_fatal_messages #2',
     wrap_args   => {sub => $sub, meta => $meta,
                     convert=>{retry=>{n=>2, non_fatal_messages=>qr/^m3$/}}},
@@ -170,11 +170,10 @@ test_wrap(
 
 # test param: delay
 
-
 {
-    $n=0;
-    my $t0=time();
+    my $t0;
     test_wrap(
+        pretest     => sub { $n=0; $t0=time() },
         name        => 'delay',
         wrap_args   => {sub => $sub, meta => $meta,
                         convert=>{retry=>{n=>2, delay=>2}}},
@@ -190,4 +189,7 @@ test_wrap(
     );
 }
 
-done_testing();
+# XXX test special argument -retries is passed
+
+DONE_TESTING:
+done_testing;
