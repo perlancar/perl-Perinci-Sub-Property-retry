@@ -1,5 +1,11 @@
 Revision history for Perinci-Sub-Property-retry
 
+0.08     2014-03-12 (SHARYANTO)
+
+         - No functional changes. Keep comments on their own lines to ease code
+           squishing by DZP::Rinci::Wrap.
+
+
 0.07     2014-03-07 (SHARYANTO)
 
          - Adjust to Perinci::Sub::Wrapper 0.51+.
