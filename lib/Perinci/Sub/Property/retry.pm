@@ -112,7 +112,7 @@ declare_property(
             $self->unindent;
             $self->push_lines('}');
             $self->unindent;
-            $self->push_lines('', '} # RETRY', '');
+            $self->push_lines('', '# RETRY', '}', '');
         },
     },
 );
