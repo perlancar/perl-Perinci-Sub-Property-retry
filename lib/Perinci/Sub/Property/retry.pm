@@ -15,7 +15,7 @@ declare_property(
         ['int' => {min=>0, default=>0}],
         ['hash*' => {keys=>{
             'n'     => ['int' => {min=>0, default=>0}],
-            'delay' => ['int' => {min=>0, default=>0}],
+            'delay' => ['int' => {min=>0, default=>0}], # XXX: use duration?
             'success_statuses'   => ['regex' => {default=>'^(2..|304)$'}],
             'fatal_statuses'     => 'regex',
             'non_fatal_statuses' => 'regex',
