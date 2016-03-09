@@ -1,5 +1,12 @@
 Revision history for Perinci-Sub-Property-retry
 
+0.09     2016-03-09 (PERLANCAR)
+
+         - No functional changes.
+
+         - Re-release/re-upload (accidentally deleted from CPAN).
+
+
 0.08     2014-03-12 (SHARYANTO)
 
          - No functional changes. Keep comments on their own lines to ease code
