@@ -1,5 +1,12 @@
 Revision history for Perinci-Sub-Property-retry
 
+0.10    2016-05-11 (PERLANCAR)
+
+	- [dist] Bump prereq version Perinci::Sub::PropertyUtil to 0.11
+	  (incompatible change due to schema for Rinci function now in
+	  Sah::Schema::rinci::function_meta instead of Sah::Schema::Rinci).
+
+
 0.09     2016-03-09 (PERLANCAR)
 
          - No functional changes.
